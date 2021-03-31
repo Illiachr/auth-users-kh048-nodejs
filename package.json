@@ -1,0 +1,41 @@
+{
+  "name": "auth-api",
+  "version": "1.0.0",
+  "description": "authorization service for Soft Inshurance project",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "start:dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Illiachr/auth-users-kh048-nodejs.git"
+  },
+  "keywords": [
+    "javascript",
+    "nodejs",
+    "postgres",
+    "jwt"
+  ],
+  "author": "ic@dev.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Illiachr/auth-users-kh048-nodejs/issues"
+  },
+  "homepage": "https://github.com/Illiachr/auth-users-kh048-nodejs#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.5.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.23.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1"
+  }
+}

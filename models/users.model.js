@@ -4,19 +4,24 @@ const { Pool } = require('pg');
 
 class Users {
   constructor() {
-    this.db = process.env.DB_NAME;
     this.usersTable = process.env.DB_USERS_TABLE;
     this.rolesTable = process.env.DB_ROLE_TABLE;
   }
 
   init() {
     this.pool = new Pool({
-      user: 'postgres',
-      password: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      database: this.db
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false
+      }
     });
+    // this.pool = new Pool({
+    //   user: 'postgres',
+    //   password: 'postgres',
+    //   host: 'localhost',
+    //   port: 5432,
+    //   database: this.db
+    // });
   }
 
   getAll() {
@@ -28,24 +33,22 @@ class Users {
   }
 
   getUserJoin(id) {
-    const sql = 'SELECT roles.role, users.id, users.first_name, users.last_name FROM roles LEFT JOIN users ON users.role_id = roles.id WHERE users.id=$1;';
+    const sql = 'SELECT roles.role, users.id FROM roles LEFT JOIN users ON users.role_id = roles.id WHERE users.id=$1;';
     return this.pool.query(sql, [id]);
   }
 
-  addUser({ login, password, firstName, lastName }) {
+  addUser({ login, password }) {
     const { hash, salt } = this.setHash(password);
 
     const user = {
       id: this.setUserId(),
-      firstName,
-      lastName,
       role: 'User',
       login,
       hash,
       salt
     };
-    const params = [user.id, firstName, lastName, 2, login, hash, salt];
-    return this.pool.query('INSERT INTO users(id, first_name, last_name, role_id, login, hash, salt) values($1, $2, $3, $4, $5, $6, $7) RETURNING *', params);
+    const params = [user.id, 2, login, hash, salt];
+    return this.pool.query('INSERT INTO users(id, role_id, login, hash, salt) values($1, $2, $3, $4, $5) RETURNING id', params);
   }
 
   setUserId() {

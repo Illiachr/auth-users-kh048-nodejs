@@ -7,7 +7,6 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./openapi/auth-service.yml');
 const usersRouter = require('./routes/users.router');
-// const catalogRouter = require('./routes/catalogRouter');
 
 const PORT = process.env.PORT || 4000;
 

@@ -21,15 +21,13 @@ const signIn = async (req, res, next) => {
 
 const signUp = async (req, res, next) => {
   try {
-    const { login } = req.body;
-    const resUserToCheck = await users.getUserByLogin(login);
-    if (resUserToCheck.rows.length) {
-      return res.status(409).send({ error: 'User already exists' });
-    }
     const result = await users.addUser(req.body);
-    res.send(result.rows[0]);
+    const id = result.rows[0].id;
+    res.send(id);
   } catch (err) {
-    res.send({ erorr: err });
+    err.code === '23505'
+      ? res.status(409).send({ error: 'Login already exists' })
+      : res.send({ err });
   }
 };
 

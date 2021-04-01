@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { v4: uuid } = require('uuid');
 const crypto = require('crypto');
 const { Pool } = require('pg');
@@ -43,8 +42,5 @@ class Users {
 
 const users = new Users();
 users.init();
-users.setPassword('secret');
-console.log(users.validPassword('secret'));
-console.log(users);
 
 module.exports = users;

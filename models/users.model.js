@@ -19,24 +19,51 @@ class Users {
     });
   }
 
+  getAll() {
+    return this.pool.query('SELECT * FROM users');
+  }
+
+  getUserByLogin(login) {
+    return this.pool.query('SELECT id, hash, salt FROM users WHERE login=$1', [login]);
+  }
+
+  getUserJoin(id) {
+    const sql = 'SELECT roles.role, users.id, users.first_name, users.last_name FROM roles LEFT JOIN users ON users.role_id = roles.id WHERE users.id=$1;';
+    return this.pool.query(sql, [id]);
+  }
+
+  addUser({ login, password, firstName, lastName }) {
+    const { hash, salt } = this.setHash(password);
+
+    const user = {
+      id: this.setUserId(),
+      firstName,
+      lastName,
+      role: 'User',
+      login,
+      hash,
+      salt
+    };
+    const params = [user.id, firstName, lastName, 2, login, hash, salt];
+    return this.pool.query('INSERT INTO users(id, first_name, last_name, role_id, login, hash, salt) values($1, $2, $3, $4, $5, $6, $7) RETURNING *', params);
+  }
+
   setUserId() {
     return uuid();
   }
 
-  // Method to set salt and hash the password for a user
-  setPassword(password) {
+  // Method to set salt for a user
+  generateSalt() {
     // Creating a unique salt for a particular user
-    this.salt = crypto.randomBytes(16).toString('hex');
+    return crypto.randomBytes(16).toString('hex');
+  }
 
+  // Method to set hash the password for a user
+  setHash(password) {
     // Hashing user's salt and password with 1000 iterations,
-
-    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
-  };
-
-  // Method to check the entered password is correct or not
-  validPassword(password) {
-    const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
-    return this.hash === hash;
+    const salt = this.generateSalt();
+    const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    return { hash, salt };
   };
 }
 

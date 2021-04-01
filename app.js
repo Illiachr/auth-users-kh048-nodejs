@@ -17,7 +17,7 @@ app.use(logger('common', { stream: fs.createWriteStream('./access.log', { flags:
 app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/users', usersRouter);
 
 // Srart server

@@ -132,7 +132,7 @@ paths:
                 login:
                   type: string
                   format: email
-                  example: user@mail.com
+                  example: client@mail.com
                 password: 
                   type: string
                   format: password

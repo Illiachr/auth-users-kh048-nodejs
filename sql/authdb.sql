@@ -1,3 +1,5 @@
+CREATE DATABASE authdb;
+
 CREATE TABLE users (
   id uuid PRIMARY KEY NOT NULL,
   first_name VARCHAR(255) NOT NULL,
@@ -6,4 +8,14 @@ CREATE TABLE users (
   login VARCHAR(255) NOT NULL,
   hash VARCHAR(255) NOT NULL,
   salt VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE users (
+  id uuid PRIMARY KEY NOT NULL,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+	role_id INTEGER REFERENCES roles(id) NOT NULL,
+  login VARCHAR(255) NOT NULL,
+  hash VARCHAR(255) NOT NULL,
+	salt VARCHAR(255) NOT NULL
 );

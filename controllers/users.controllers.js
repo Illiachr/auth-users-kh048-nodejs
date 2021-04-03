@@ -26,9 +26,15 @@ const changeRole = async (req, res, next) => {
   next();
 };
 
+const getAll = async (req, res, next) => {
+  await service.getAll(res);
+  next();
+};
+
 module.exports = {
   signUp,
   signIn,
   changePassword,
-  changeRole
+  changeRole,
+  getAll
 };

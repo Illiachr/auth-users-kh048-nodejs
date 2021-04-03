@@ -75,11 +75,21 @@ const changeRole = async (id, roleId, res) => {
       return res.status(resStatus).send({ error: 'Such user don`t exist' });
     }
 
-    const resPasswordChange = await users.changeRole(id, roleId);
-    res.send(resPasswordChange.rows[0]);
+    const resRoleChange = await users.changeRole(id, roleId);
+    res.send(resRoleChange.rows[0]);
   } catch (err) {
     res.status(resStatus).send({ error: err });
   }
 };
 
-module.exports = { signUp, signIn, changePassword, changeRole };
+const getAll = async (res) => {
+  const resStatus = 500;
+  try {
+    const resUsers = await users.getAll();
+    res.send(resUsers.rows);
+  } catch (err) {
+    res.status(resStatus).send({ error: err });
+  }
+};
+
+module.exports = { signUp, signIn, changePassword, changeRole, getAll };

@@ -10,9 +10,12 @@ router.route('/signin')
   .post(controller.signIn);
 
 router.route('/:id/change-password')
-  .post(checkToken(['Admin']), controller.changePassword);
+  .post(checkToken(['Admin', 'User']), controller.changePassword);
 
 router.route('/:id/change-role')
   .post(checkToken(['Admin']), controller.changeRole);
+
+router.route('/')
+  .get(checkToken(['Admin']), controller.getAll);
 
 module.exports = router;

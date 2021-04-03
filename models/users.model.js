@@ -19,10 +19,6 @@ class Users {
     });
   }
 
-  getAll() {
-    return this.pool.query('SELECT * FROM users');
-  }
-
   getUserByLogin(login) {
     return this.pool.query('SELECT id, hash, salt FROM users WHERE login=$1', [login]);
   }
@@ -61,6 +57,10 @@ class Users {
 
   changeRole(id, roleId) {
     return this.pool.query('UPDATE users SET role_id=$1 WHERE users.id=$2 RETURNING id', [roleId, id]);
+  }
+
+  getAll() {
+    return this.pool.query('SELECT id,role_id,login FROM users');
   }
 
   setUserId() {

@@ -15,4 +15,25 @@ const createToken = (userId, userRole, expiresIn = '1h') => {
   return jwt.sign({ sub: userId, role: userRole }, secret, { expiresIn });
 };
 
-module.exports = { valid, createToken };
+function checkToken(roles = []) {
+  const secret = process.env.JWT_SECRET;
+  if (typeof roles === 'string') {
+    roles = [roles];
+  }
+
+  return [
+    (req, res, next) => {
+      const token = req.headers['x-access-token'];
+      if (!token) {
+        return res.status(400).json({ message: 'x-access-token (jwt) must be provided' });
+      }
+      req.user = jwt.verify(token, secret);
+      if (roles.length && !roles.includes(req.user.role)) {
+        return res.status(401).json({ message: 'Don`t have permission' });
+      }
+      next();
+    }
+  ];
+}
+
+module.exports = { valid, createToken, checkToken };

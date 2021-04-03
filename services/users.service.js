@@ -1,10 +1,10 @@
 const users = require('../models/users.model');
 const authUtils = require('../_helpers/auth.utils');
 
-const authorize = async (id, res) => {
-  const resUserToJWT = await users.getUserPayload(id);
-  const { userId, userRole } = resUserToJWT.rows[0];
-  return authUtils.createToken(userId, userRole);
+const authorize = async (userId, res) => {
+  const resUserToJWT = await users.getUserPayload(userId);
+  const { id, role } = resUserToJWT.rows[0];
+  return authUtils.createToken(id, role);
 };
 
 const signUp = async (body, res) => {

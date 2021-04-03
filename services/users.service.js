@@ -16,7 +16,7 @@ const signUp = async (body, res) => {
   } catch (err) {
     err.code === '23505'
       ? res.status(409).send({ error: 'Login already exists' })
-      : res.send({ err });
+      : res.send({ error: err });
   }
 };
 
@@ -35,7 +35,7 @@ const signIn = async (login, password, res) => {
     const token = await authorize(id, res);
     res.send({ token });
   } catch (err) {
-    res.status(resStatus).send(err);
+    res.status(resStatus).send({ error: err });
   }
 };
 

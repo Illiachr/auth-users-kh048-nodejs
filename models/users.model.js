@@ -6,6 +6,8 @@ class Users {
   constructor() {
     this.usersTable = process.env.DB_USERS_TABLE;
     this.rolesTable = process.env.DB_ROLE_TABLE;
+
+    this.init();
   }
 
   init() {
@@ -15,13 +17,6 @@ class Users {
         rejectUnauthorized: false
       }
     });
-    // this.pool = new Pool({
-    //   user: 'postgres',
-    //   password: 'postgres',
-    //   host: 'localhost',
-    //   port: 5432,
-    //   database: this.db
-    // });
   }
 
   getAll() {
@@ -32,7 +27,7 @@ class Users {
     return this.pool.query('SELECT id, hash, salt FROM users WHERE login=$1', [login]);
   }
 
-  getUserJoin(id) {
+  getUserPayload(id) {
     const sql = 'SELECT roles.role, users.id FROM roles LEFT JOIN users ON users.role_id = roles.id WHERE users.id=$1;';
     return this.pool.query(sql, [id]);
   }
@@ -71,6 +66,5 @@ class Users {
 }
 
 const users = new Users();
-users.init();
 
 module.exports = users;

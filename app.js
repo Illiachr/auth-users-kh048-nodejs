@@ -22,4 +22,5 @@ app.use('/api/v1/users', usersRouter);
 // Srart server
 app.listen(PORT, () => {
   console.warn(`Server has been started on port http://localhost:${PORT}`);
+  console.warn(`You can use Swagger UI http://localhost:${PORT}/api-docs/#`);
 });

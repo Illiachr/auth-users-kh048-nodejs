@@ -19,10 +19,9 @@ const changePassword = async (req, res, next) => {
 };
 
 const changeRole = async (req, res, next) => {
-  // eslint-disable-next-line camelcase
-  const { role_id } = req.body;
+  const { newRole } = req.body;
   const id = req.params.id;
-  await service.changeRole(id, role_id, res);
+  await service.changeRole(id, newRole, res);
   next();
 };
 

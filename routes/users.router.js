@@ -10,10 +10,10 @@ router.route('/signin')
   .post(controller.signIn);
 
 router.route('/:id/change-password')
-  .post(checkToken(['Admin', 'User']), controller.changePassword);
+  .patch(checkToken(['Admin', 'User']), controller.changePassword);
 
 router.route('/:id/change-role')
-  .post(checkToken(['Admin']), controller.changeRole);
+  .patch(checkToken(['Admin']), controller.changeRole);
 
 router.route('/')
   .get(checkToken(['Admin']), controller.getAll);

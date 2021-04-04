@@ -36,6 +36,10 @@ class Users {
     return this.pool.query('SELECT * FROM roles');
   }
 
+  getRole(roleName) {
+    return this.pool.query('SELECT * FROM roles WHERE role=$1', [roleName]);
+  }
+
   addUser({ login, password }) {
     const { hash, salt } = this.setHash(password);
 

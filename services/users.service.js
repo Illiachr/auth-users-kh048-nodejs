@@ -63,7 +63,7 @@ const changePassword = async (id, password, newPassword, res) => {
   }
 };
 
-const changeRole = async (id, roleId, res) => {
+const changeRole = async (id, newRole, res) => {
   let resStatus = 500;
 
   try {
@@ -74,8 +74,13 @@ const changeRole = async (id, roleId, res) => {
       resStatus = 404;
       return res.status(resStatus).send({ error: 'Such user don`t exist' });
     }
-
-    const resRoleChange = await users.changeRole(id, roleId);
+    const resRole = await users.getRole(newRole);
+    const role = resRole.rows[0];
+    if (!role) {
+      resStatus = 404;
+      return res.status(resStatus).send({ error: 'Such role don`t exist' });
+    }
+    const resRoleChange = await users.changeRole(id, role.id);
     res.send(resRoleChange.rows[0]);
   } catch (err) {
     res.status(resStatus).send({ error: err });

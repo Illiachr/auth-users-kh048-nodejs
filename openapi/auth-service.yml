@@ -189,7 +189,7 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
-  /users/{userId}/change-role:
+  /{userId}/change-role:
     patch:
       tags:
         - secure
@@ -216,6 +216,24 @@ paths:
       responses:
         "204":
           description: User role changed successfully
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /:
+    get:
+      tags:
+        - secure
+      summary: get all users
+      operationId: getAll
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Users list
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":

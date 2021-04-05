@@ -39,4 +39,62 @@ const signIn = async (login, password, res) => {
   }
 };
 
-module.exports = { signUp, signIn };
+const changePassword = async (id, password, newPassword, res) => {
+  let resStatus = 500;
+
+  try {
+    // eslint-disable-next-line no-use-before-define
+    const resUserToCheck = await users.getUserById(id);
+    const user = resUserToCheck.rows[0];
+    if (!user) {
+      resStatus = 404;
+      return res.status(resStatus).send({ error: 'Such user don`t exist' });
+    }
+    const { hash, salt } = user;
+
+    if (!authUtils.valid(password, hash, salt)) {
+      resStatus = 400;
+      return res.status(resStatus).send({ error: 'Old or password is incorrect' });
+    };
+    const resPasswordChange = await users.changePassword(id, newPassword);
+    res.send(resPasswordChange.rows[0]);
+  } catch (err) {
+    res.status(resStatus).send({ error: err });
+  }
+};
+
+const changeRole = async (id, newRole, res) => {
+  let resStatus = 500;
+
+  try {
+    // eslint-disable-next-line no-use-before-define
+    const resUserToCheck = await users.getUserById(id);
+    const user = resUserToCheck.rows[0];
+    if (!user) {
+      resStatus = 404;
+      return res.status(resStatus).send({ error: 'Such user don`t exist' });
+    }
+    const resRole = await users.getRole(newRole);
+    const role = resRole.rows[0];
+    if (!role) {
+      resStatus = 404;
+      return res.status(resStatus).send({ error: 'Such role don`t exist' });
+    }
+    const resRoleChange = await users.changeRole(id, role.id);
+    res.send(resRoleChange.rows[0]);
+  } catch (err) {
+    res.status(resStatus).send({ error: err });
+  }
+};
+
+const getAll = async (res) => {
+  const resStatus = 500;
+  try {
+    const resUsers = await users.getAll();
+    res.send(resUsers.rows);
+  } catch (err) {
+    res.status(resStatus).send({ error: err });
+  }
+};
+
+module.exports = { signUp, signIn, changePassword, changeRole, getAll };

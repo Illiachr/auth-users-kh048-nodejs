@@ -19,17 +19,25 @@ class Users {
     });
   }
 
-  getAll() {
-    return this.pool.query('SELECT * FROM users');
-  }
-
   getUserByLogin(login) {
     return this.pool.query('SELECT id, hash, salt FROM users WHERE login=$1', [login]);
+  }
+
+  getUserById(id) {
+    return this.pool.query('SELECT id, hash, salt FROM users WHERE id=$1', [id]);
   }
 
   getUserPayload(id) {
     const sql = 'SELECT roles.role, users.id FROM roles LEFT JOIN users ON users.role_id = roles.id WHERE users.id=$1;';
     return this.pool.query(sql, [id]);
+  }
+
+  getRoles() {
+    return this.pool.query('SELECT * FROM roles');
+  }
+
+  getRole(roleName) {
+    return this.pool.query('SELECT * FROM roles WHERE role=$1', [roleName]);
   }
 
   addUser({ login, password }) {
@@ -44,6 +52,19 @@ class Users {
     };
     const params = [user.id, 2, login, hash, salt];
     return this.pool.query('INSERT INTO users(id, role_id, login, hash, salt) values($1, $2, $3, $4, $5) RETURNING id', params);
+  }
+
+  changePassword(id, password) {
+    const { hash, salt } = this.setHash(password);
+    return this.pool.query('UPDATE users SET hash=$1,salt=$2 WHERE users.id=$3 RETURNING id', [hash, salt, id]);
+  }
+
+  changeRole(id, roleId) {
+    return this.pool.query('UPDATE users SET role_id=$1 WHERE users.id=$2 RETURNING id', [roleId, id]);
+  }
+
+  getAll() {
+    return this.pool.query('SELECT id,role_id,login FROM users');
   }
 
   setUserId() {

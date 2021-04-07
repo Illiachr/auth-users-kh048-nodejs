@@ -1,5 +1,15 @@
 const service = require('../services/users.service');
 
+// name of request params
+const params = {
+  login: 'login',
+  pwd: 'password',
+  role: 'role',
+  newLogin: 'newLogin',
+  newPwd: 'newPassword',
+  newRole: 'newRole'
+};
+
 const signIn = async (req, res, next) => {
   const { login, password } = req.body;
   await service.signIn(login, password, res);
@@ -9,6 +19,10 @@ const signIn = async (req, res, next) => {
 const signUp = async (req, res, next) => {
   await service.signUp(req.body, res);
   next();
+};
+
+const changeLogin = async (req, res, next) => {
+  await service.changeLogin(req, res, next);
 };
 
 const changePassword = async (req, res, next) => {
@@ -33,6 +47,7 @@ const getAll = async (req, res, next) => {
 module.exports = {
   signUp,
   signIn,
+  changeLogin,
   changePassword,
   changeRole,
   getAll

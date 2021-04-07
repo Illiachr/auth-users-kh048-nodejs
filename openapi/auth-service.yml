@@ -72,6 +72,15 @@ components:
               error:
                 type: string
                 example: Username or password is incorrect
+    BadRequest:
+      description: Body params not valid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
     InternalError:
       description: Internal error
       content:
@@ -87,7 +96,7 @@ paths:
     post:
       tags:
         - public
-      summary: Authenticate user credentials and return a JWT token
+      summary: Create new user with credentials and return a JWT token
       operationId: signUp
       requestBody:
         required: true
@@ -106,6 +115,8 @@ paths:
                   token:
                     type: string
                     example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWIxMmUxOTdlMDZhNzZjY2RlZmMxMjEiLCJpZCI6IjVlYjEyZTE5N2UwNmE3NmNjZGVmYzEyMSIsImlhdCI6MTU4ODc1ODE1N30.xR9H0STbFOpSkuGA9jHNZOJ6eS7umHHqKRhI807YT1Y"
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "409":
           $ref: "#/components/responses/AlreadyExists"
         "500":
@@ -147,6 +158,44 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /{userId}/change-login:
+    patch:
+      tags:
+        - secure
+      summary: change user login
+      operationId: changeLogin
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newLogin:
+                  type: string
+
+      responses:
+        "204":
+          description: User login changed successfully
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "409":
+          $ref: "#/components/responses/AlreadyExists"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
   /{userId}/change-password:
     patch:
       tags:
@@ -181,7 +230,7 @@ paths:
         "204":
           description: User password changed successfully
         "400":
-          $ref: "#/components/responses/LoginPwdError"
+          $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":
@@ -193,7 +242,7 @@ paths:
     patch:
       tags:
         - secure
-      summary: change user role
+      summary: change user role, only for admin
       operationId: changeRole
       security:
         - bearerAuth: []
@@ -216,24 +265,8 @@ paths:
       responses:
         "204":
           description: User role changed successfully
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "404":
-          $ref: "#/components/responses/NotFoundError"
-        "500":
-          $ref: "#/components/responses/InternalError"
-
-  /:
-    get:
-      tags:
-        - secure
-      summary: get all users
-      operationId: getAll
-      security:
-        - bearerAuth: []
-      responses:
-        "204":
-          description: Users list
+        "400":
+          $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
         "404":

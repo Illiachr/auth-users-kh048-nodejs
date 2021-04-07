@@ -11,13 +11,16 @@ router.route('/signup')
 router.route('/signin')
   .post(controller.signIn);
 
+router.route('/:id/change-login')
+  .patch(authorize(), controller.changeLogin);
+
 router.route('/:id/change-password')
-  .patch(authorize(), errorHandler, controller.changePassword);
+  .patch(authorize(), controller.changePassword);
 
 router.route('/:id/change-role')
-  .patch(authorize(Role.Admin), errorHandler, controller.changeRole);
+  .patch(authorize(Role.Admin), controller.changeRole);
 
 router.route('/')
-  .get(authorize(Role.Admin), errorHandler, controller.getAll);
+  .get(authorize(Role.Admin), controller.getAll);
 
 module.exports = router;

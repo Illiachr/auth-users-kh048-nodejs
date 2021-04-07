@@ -18,10 +18,10 @@ app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
 
-app.use(errorHandler);
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/users', usersRouter);
+
+app.use(errorHandler);
 
 // Srart server
 app.listen(PORT, () => {

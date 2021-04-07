@@ -2,7 +2,6 @@ const { Router } = require('express');
 const router = Router();
 const controller = require('../controllers/users.controllers');
 const { authorize } = require('../_helpers/auth.utils');
-const errorHandler = require('../_helpers/error-handler');
 const Role = require('../_helpers/role');
 
 router.route('/signup')

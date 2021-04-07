@@ -1,15 +1,5 @@
 const service = require('../services/users.service');
 
-// name of request params
-const params = {
-  login: 'login',
-  pwd: 'password',
-  role: 'role',
-  newLogin: 'newLogin',
-  newPwd: 'newPassword',
-  newRole: 'newRole'
-};
-
 const signIn = async (req, res, next) => {
   const { login, password } = req.body;
   await service.signIn(login, password, res);

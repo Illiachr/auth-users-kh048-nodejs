@@ -18,8 +18,7 @@ components:
       properties:
         login:
           type: string
-          format: email
-          example: client@mail.com
+          example: client-login
         password:
           type: string
           format: password
@@ -136,11 +135,9 @@ paths:
               properties:
                 login:
                   type: string
-                  format: email
-                  example: client@mail.com
+                  example: client-login
                 password:
                   type: string
-                  format: password
                   example: passwd123
       responses:
         "200":
@@ -181,6 +178,7 @@ paths:
               properties:
                 newLogin:
                   type: string
+                  example: new_login
 
       responses:
         "204":
@@ -224,7 +222,7 @@ paths:
                 newPassword:
                   type: string
                   format: password
-                  example: f$MF(3EmG`#WRu&a
+                  example: fMF3EmGWRua
 
       responses:
         "204":
@@ -261,7 +259,7 @@ paths:
               properties:
                 newRole:
                   type: string
-                  example: manager
+                  example: operator
       responses:
         "204":
           description: User role changed successfully

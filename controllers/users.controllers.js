@@ -2,7 +2,7 @@ const service = require('../services/users.service');
 
 const signIn = async (req, res, next) => {
   const { login, password } = req.body;
-  await service.signIn(login, password, res);
+  await service.signIn(login, password, res, next);
   next();
 };
 

@@ -101,7 +101,7 @@ const changeLogin = async (req, res, next) => {
 
     resDb = await users.changeLogin(user.id, newLogin);
     const { login } = resDb.rows[0];
-    compareLogin(login);
+    compareLogin(login, newLogin, res);
     res.sendStatus(204);
   } catch (err) {
     next(err);

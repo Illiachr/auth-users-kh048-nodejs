@@ -1,7 +1,8 @@
 const { Router } = require('express');
 const router = Router();
 const controller = require('../controllers/users.controllers');
-const { checkToken } = require('../_helpers/auth.utils');
+const { authorize } = require('../_helpers/auth.utils');
+const Role = require('../_helpers/role');
 
 router.route('/signup')
   .post(controller.signUp);
@@ -9,13 +10,16 @@ router.route('/signup')
 router.route('/signin')
   .post(controller.signIn);
 
+router.route('/:id/change-login')
+  .patch(authorize(), controller.changeLogin);
+
 router.route('/:id/change-password')
-  .patch(checkToken(['Admin', 'User']), controller.changePassword);
+  .patch(authorize(), controller.changePassword);
 
 router.route('/:id/change-role')
-  .patch(checkToken(['Admin']), controller.changeRole);
+  .patch(authorize(Role.Admin), controller.changeRole);
 
 router.route('/')
-  .get(checkToken(['Admin']), controller.getAll);
+  .get(authorize(Role.Admin), controller.getAll);
 
 module.exports = router;

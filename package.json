@@ -17,7 +17,7 @@
     "postgres",
     "jwt"
   ],
-  "author": "ic@dev.com",
+  "author": "kh048@dev.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Illiachr/auth-users-kh048-nodejs/issues"

@@ -23,6 +23,7 @@ const checkLogin = async (login, res) => {
   }
   const resDb = await users.getUserByLogin(login);
   if (resDb.rows[0]) {
+    res.status(409);
     throw new Error('Login already exists');
   }
 };
@@ -43,7 +44,7 @@ const checkPwd = (password, res) => {
 
 const checkAccess = (id, user, res) => {
   if (id !== user.sub && user.role !== ROLE.Admin) {
-    res.sendStatus(403);
+    res.status(403);
     throw new Error('Premission denided');
   }
 };
@@ -92,7 +93,7 @@ const changeLogin = async (req, res, next) => {
     const { user: currentUser } = req;
     const { newLogin } = req.body;
 
-    checkAccess(req.params.id, currentUser.role, res);
+    checkAccess(req.params.id, currentUser, res);
 
     let resDb = await users.getUserById(req.params.id);
     const user = resDb.rows[0];
@@ -138,16 +139,16 @@ const changeRole = async (id, newRole, res) => {
     const user = resUserToCheck.rows[0];
     if (!user) {
       resStatus = 404;
-      return res.status(resStatus).send({ error: 'Such user don`t exist' });
+      return res.status(resStatus).send({ error: 'User not found' });
     }
     const resRole = await users.getRole(newRole);
     const role = resRole.rows[0];
     if (!role) {
       resStatus = 404;
-      return res.status(resStatus).send({ error: 'Such role don`t exist' });
+      return res.status(resStatus).send({ error: 'Role not found' });
     }
-    const resRoleChange = await users.changeRole(id, role.id);
-    res.send(resRoleChange.rows[0]);
+    await users.changeRole(id, role.id);
+    res.sendStatus(204);
   } catch (err) {
     res.status(resStatus).send({ error: err });
   }

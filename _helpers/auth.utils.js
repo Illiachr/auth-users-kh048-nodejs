@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const expressJwt = require('express-jwt');
 
 // Method to check the entered password is correct or not
 const valid = (password, hash, salt) => {
@@ -15,25 +16,34 @@ const createToken = (userId, userRole, expiresIn = '1h') => {
   return jwt.sign({ sub: userId, role: userRole }, secret, { expiresIn });
 };
 
-function checkToken(roles = []) {
+const authorize = (roles = []) => {
   const secret = process.env.JWT_SECRET;
+
+  // roles param can be a single role string (e.g. Role.User or 'User')
+  // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
+
   if (typeof roles === 'string') {
     roles = [roles];
   }
 
   return [
+    // authenticate JWT token and attach user to requset object (req.user)
+    expressJwt({
+      secret,
+      algorithms: ['HS256']
+    }),
+
+    // authorize based on user role
     (req, res, next) => {
-      const token = req.headers['x-access-token'];
-      if (!token) {
-        return res.status(400).json({ message: 'x-access-token (jwt) must be provided' });
-      }
-      req.user = jwt.verify(token, secret);
       if (roles.length && !roles.includes(req.user.role)) {
-        return res.status(401).json({ message: 'Don`t have permission' });
+        // user's role is not authorized
+        return res.status(401).send({ error: 'Unauthorized' });
       }
+
+      //  authentication and authorization successful
       next();
     }
   ];
-}
+};
 
-module.exports = { valid, createToken, checkToken };
+module.exports = { valid, createToken, authorize };

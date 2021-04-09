@@ -20,11 +20,11 @@ class Users {
   }
 
   getUserByLogin(login) {
-    return this.pool.query('SELECT id, hash, salt FROM users WHERE login=$1', [login]);
+    return this.pool.query('SELECT id, login, hash, salt FROM users WHERE login=$1', [login]);
   }
 
   getUserById(id) {
-    return this.pool.query('SELECT id, hash, salt FROM users WHERE id=$1', [id]);
+    return this.pool.query('SELECT id, login, hash, salt FROM users WHERE id=$1', [id]);
   }
 
   getUserPayload(id) {
@@ -52,6 +52,10 @@ class Users {
     };
     const params = [user.id, 2, login, hash, salt];
     return this.pool.query('INSERT INTO users(id, role_id, login, hash, salt) values($1, $2, $3, $4, $5) RETURNING id', params);
+  }
+
+  changeLogin(id, login) {
+    return this.pool.query('UPDATE users SET login=$1 WHERE users.id=$2 RETURNING login', [login, id]);
   }
 
   changePassword(id, password) {

@@ -12,12 +12,12 @@ const valid = (password, hash, salt) => {
 
 // create a jwt token that is valid for 1 hour
 const createToken = (userId, userRole, expiresIn = '1h') => {
-  const secret = process.env.JWT_SECRET;
-  return jwt.sign({ sub: userId, role: userRole }, secret, { expiresIn });
+  const privateKey = Buffer.from(process.env.PRIVATE_KEY, 'base64');
+  return jwt.sign({ sub: userId, role: userRole }, privateKey, { algorithm: 'RS256', expiresIn });
 };
 
 const authorize = (roles = []) => {
-  const secret = process.env.JWT_SECRET;
+  const publicKey = Buffer.from(process.env.PUBLIC_KEY, 'base64');
 
   // roles param can be a single role string (e.g. Role.User or 'User')
   // or an array of roles (e.g. [Role.Admin, Role.User] or ['Admin', 'User'])
@@ -29,8 +29,8 @@ const authorize = (roles = []) => {
   return [
     // authenticate JWT token and attach user to requset object (req.user)
     expressJwt({
-      secret,
-      algorithms: ['HS256']
+      secret: publicKey,
+      algorithms: ['RS256']
     }),
 
     // authorize based on user role

@@ -18,7 +18,7 @@ app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/users', usersRouter);
 
 app.use(errorHandler);
@@ -26,5 +26,5 @@ app.use(errorHandler);
 // Srart server
 app.listen(PORT, () => {
   console.warn(`Server has been started on port http://localhost:${PORT}`);
-  console.warn(`You can use Swagger UI http://localhost:${PORT}/api-docs/#`);
+  console.warn(`You can use Swagger UI http://localhost:${PORT}/#`);
 });

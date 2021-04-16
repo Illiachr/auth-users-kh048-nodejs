@@ -124,8 +124,8 @@ const changePassword = async (id, password, newPassword, res) => {
       resStatus = 400;
       return res.status(resStatus).send({ error: 'oldPassword or password is incorrect' });
     };
-    const resPasswordChange = await users.changePassword(id, newPassword);
-    res.send(resPasswordChange.rows[0]);
+    await users.changePassword(id, newPassword);
+    res.sendStatus(204);
   } catch (err) {
     res.status(resStatus).send({ error: err });
   }

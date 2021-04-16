@@ -18,11 +18,11 @@ app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/users', usersRouter);
 
 app.use(errorHandler);
 
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Srart server
 app.listen(PORT, () => {
   console.warn(`Server has been started on port http://localhost:${PORT}`);
